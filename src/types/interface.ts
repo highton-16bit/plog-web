@@ -4,7 +4,7 @@ export interface ButtonInterface {
   children: React.ReactNode;
 }
 
-export type Region = "경기도" | "강원도" | "충청도" | "경상도" | "전라도" | "제주도";
+export type Region = "경기도" | "강원도" | "충청도" | "경상도" | "전라도" | "제주도" | "서울";
 
 export interface PostEvent {
   time: string;
@@ -26,5 +26,7 @@ export interface Post {
   imageUrl: string;
   likes: number;
   isBookmarked: boolean;
+  startDate?: string;
+  endDate?: string;
   days: PostDay[];
 }

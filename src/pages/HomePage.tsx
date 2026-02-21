@@ -53,7 +53,7 @@ const HomePage = () => {
       </div>
 
       {/* 피드 */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
         {filteredPosts.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-400 text-sm">
             해당 지역의 게시물이 없습니다.

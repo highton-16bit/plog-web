@@ -1,8 +1,12 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import type { Post } from "../../types/interface";
+import { usePosts } from "../../context/PostsContext";
 
 const PostCard = memo(({ post }: { post: Post }) => {
-  const [bookmarked, setBookmarked] = useState(post.isBookmarked);
+  const { likes, bookmarks, toggleLike, toggleBookmark } = usePosts();
+  const isLiked = likes.has(post.id);
+  const isBookmarked = bookmarks.has(post.id);
+  const likeCount = post.likes + (isLiked ? 1 : 0);
 
   return (
     <article className="bg-white">
@@ -11,7 +15,12 @@ const PostCard = memo(({ post }: { post: Post }) => {
         <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="8" r="4" stroke="#9CA3AF" strokeWidth="1.8" />
-            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round" />
+            <path
+              d="M4 20c0-4 3.6-7 8-7s8 3 8 7"
+              stroke="#9CA3AF"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
           </svg>
         </div>
         <div>
@@ -30,35 +39,54 @@ const PostCard = memo(({ post }: { post: Post }) => {
 
       {/* 액션 바 */}
       <div className="flex items-center px-4 py-3">
-        <div className="flex items-center gap-1.5 text-gray-400 text-sm">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        {/* 좋아요 (마커 아이콘) */}
+        <button
+          onClick={() => toggleLike(post.id)}
+          className="flex items-center gap-1.5 text-sm transition-colors"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path
               d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-              stroke="#9CA3AF" strokeWidth="1.8"
+              fill={isLiked ? "#5B5BD6" : "none"}
+              stroke={isLiked ? "#5B5BD6" : "#9CA3AF"}
+              strokeWidth="1.8"
             />
-            <circle cx="12" cy="9" r="2.5" stroke="#9CA3AF" strokeWidth="1.8" />
+            <circle
+              cx="12"
+              cy="9"
+              r="2.5"
+              fill={isLiked ? "white" : "none"}
+              stroke={isLiked ? "white" : "#9CA3AF"}
+              strokeWidth="1.8"
+            />
           </svg>
-          <span>{post.likes}</span>
-        </div>
+          <span className={isLiked ? "text-plog font-semibold" : "text-gray-400"}>
+            {likeCount}
+          </span>
+        </button>
+
+        {/* 공유 */}
         <div className="flex items-center gap-3 ml-3">
           <button className="text-gray-400">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path
                 d="M4 12v8a1 1 0 001 1h14a1 1 0 001-1v-8M16 6l-4-4-4 4M12 2v13"
-                stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                stroke="#9CA3AF"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </button>
         </div>
-        <button
-          onClick={() => setBookmarked((b) => !b)}
-          className="ml-auto"
-        >
+
+        {/* 북마크 */}
+        <button onClick={() => toggleBookmark(post.id)} className="ml-auto">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path
               d="M5 3h14a1 1 0 011 1v17l-8-4-8 4V4a1 1 0 011-1z"
-              fill={bookmarked ? "#5B5BD6" : "none"}
-              stroke={bookmarked ? "#5B5BD6" : "#9CA3AF"}
+              fill={isBookmarked ? "#5B5BD6" : "none"}
+              stroke={isBookmarked ? "#5B5BD6" : "#9CA3AF"}
               strokeWidth="1.8"
               strokeLinejoin="round"
             />

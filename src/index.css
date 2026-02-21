@@ -7,3 +7,10 @@
   --color-dark: #0d1117;
   --color-plog: #5B5BD6;
 };
+
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
