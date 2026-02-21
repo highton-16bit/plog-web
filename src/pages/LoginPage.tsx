@@ -1,18 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/common/Button";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
+  const isReady = id.trim().length > 0 && password.length > 0;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isReady) return;
+    // TODO: 서버 연동 시 api/auth.ts 교체
+    navigate("/home");
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-white px-8">
-      {/* 로고 영역 */}
+      {/* 로고 */}
       <div className="flex justify-center mt-32 mb-16">
         <img src="/Plog.svg" alt="Plog" className="h-20" />
       </div>
@@ -45,13 +51,16 @@ const LoginPage = () => {
         {/* 로그인 버튼 */}
         <Button
           type="submit"
-          className="mt-4 w-full bg-plog text-white font-bold text-base py-4 rounded-2xl active:opacity-80 transition-opacity"
+          className={`mt-4 w-full font-bold text-base py-4 rounded-2xl transition-all ${
+            isReady
+              ? "bg-plog text-white active:opacity-80"
+              : "bg-gray-100 text-gray-300 cursor-not-allowed"
+          }`}
         >
           로그인
         </Button>
       </form>
 
-      {/* 회원가입 링크 */}
       <p className="text-center text-sm text-gray-400 mt-4">
         계정이 없으신가요?{" "}
         <Link to="/register" className="text-plog font-semibold">

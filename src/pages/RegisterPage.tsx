@@ -1,23 +1,35 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+
+  const isReady =
+    id.trim().length > 0 &&
+    password.length > 0 &&
+    confirm.length > 0 &&
+    password === confirm;
+
+  const pwMismatch = confirm.length > 0 && password !== confirm;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 회원가입 API 연동
+    if (!isReady) return;
+    // TODO: 서버 연동 시 api/auth.ts 교체
+    navigate("/home");
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-white px-8">
       {/* 로고 영역 */}
-      <div className="flex justify-center mt-32 mb-16">
+      <div className="flex justify-center mt-24 mb-12">
         <img src="/Plog.svg" alt="Plog" className="h-20" />
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-7">
         {/* 아이디 */}
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-gray-700">아이디</label>
@@ -42,10 +54,32 @@ const RegisterPage = () => {
           />
         </div>
 
+        {/* 비밀번호 확인 */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-gray-700">비밀번호 확인</label>
+          <input
+            type="password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="비밀번호를 다시 입력해주세요."
+            className={`border-b py-2 text-sm text-black placeholder:text-gray-300 outline-none transition-colors ${
+              pwMismatch ? "border-red-400" : "border-gray-300 focus:border-plog"
+            }`}
+          />
+          {pwMismatch && (
+            <p className="text-xs text-red-400">비밀번호가 일치하지 않습니다.</p>
+          )}
+        </div>
+
         {/* 회원가입 버튼 */}
         <button
           type="submit"
-          className="mt-4 w-full bg-plog text-white font-bold text-base py-4 rounded-2xl active:opacity-80 transition-opacity"
+          disabled={!isReady}
+          className={`mt-2 w-full font-bold text-base py-4 rounded-2xl transition-all ${
+            isReady
+              ? "bg-plog text-white active:opacity-80"
+              : "bg-gray-100 text-gray-300 cursor-not-allowed"
+          }`}
         >
           회원가입
         </button>
