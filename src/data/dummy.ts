@@ -173,7 +173,6 @@ export const DUMMY_POSTS: Post[] = [
       },
     ],
   },
-  // 서울 / 광화문 포스트
   {
     id: "seoul-1",
     username: "우성민",
