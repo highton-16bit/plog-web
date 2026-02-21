@@ -1,0 +1,12 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="4.3335" y="4" width="40" height="40" rx="12" fill="#5366FB"/>
+<mask id="mask0_119_449" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="13" y="13" width="22" height="22">
+<path d="M14 21.3684H34V32.9474C34 33.2265 33.8891 33.4943 33.6917 33.6917C33.4943 33.8891 33.2265 34 32.9474 34H15.0526C14.7735 34 14.5057 33.8891 14.3083 33.6917C14.1109 33.4943 14 33.2265 14 32.9474V21.3684Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+<path d="M14 16.6315C14 16.3523 14.1109 16.0846 14.3083 15.8872C14.5057 15.6898 14.7735 15.5789 15.0526 15.5789H32.9474C33.2265 15.5789 33.4943 15.6898 33.6917 15.8872C33.8891 16.0846 34 16.3523 34 16.6315V21.3683H14V16.6315Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+<path d="M19.7896 27.6843L22.9474 30.8422L29.2632 24.5264" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19.7896 14V18.2105M28.2106 14V18.2105" stroke="white" stroke-width="2" stroke-linecap="round"/>
+</mask>
+<g mask="url(#mask0_119_449)">
+<path d="M11.3684 11.3684H36.6316V36.6316H11.3684V11.3684Z" fill="white"/>
+</g>
+</svg>
