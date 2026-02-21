@@ -18,9 +18,9 @@ const HomePage = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen">
+    <>
       {/* 헤더 */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-3 bg-white">
+      <div className="app-header flex items-center justify-between px-4 pt-4 pb-3 bg-white">
         <img src="/Plog.svg" alt="Plog" className="h-8" />
         <button>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -32,38 +32,45 @@ const HomePage = () => {
         </button>
       </div>
 
-      {/* 카테고리 필터 */}
-      <div className="flex gap-2 px-4 py-2 overflow-x-auto scrollbar-hide bg-white border-b border-gray-100">
-        {REGIONS.map((region) => {
-          const active = selectedRegion === region;
-          return (
-            <button
-              key={region}
-              onClick={() => setSelectedRegion(active ? null : region)}
-              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                active
-                  ? "bg-gray-900 text-white"
-                  : "bg-white text-gray-600 border border-gray-300"
-              }`}
-            >
-              {region}
-            </button>
-          );
-        })}
+      {/* 카테고리 필터 + 피드 */}
+      <div className="app-content flex flex-col">
+        {/* 카테고리 필터 */}
+        <div className="flex gap-2 px-4 py-2 overflow-x-auto scrollbar-hide bg-white border-b border-gray-100">
+          {REGIONS.map((region) => {
+            const active = selectedRegion === region;
+            return (
+              <button
+                key={region}
+                onClick={() => setSelectedRegion(active ? null : region)}
+                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-gray-900 text-white"
+                    : "bg-white text-gray-600 border border-gray-300"
+                }`}
+              >
+                {region}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 피드 */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
+          {filteredPosts.length === 0 ? (
+            <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+              해당 지역의 게시물이 없습니다.
+            </div>
+          ) : (
+            filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
+          )}
+        </div>
       </div>
 
-      {/* 피드 */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
-        {filteredPosts.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-400 text-sm">
-            해당 지역의 게시물이 없습니다.
-          </div>
-        ) : (
-          filteredPosts.map((post) => <PostCard key={post.id} post={post} />)
-        )}
+      {/* 바텀 네비 */}
+      <div className="app-bottom-nav">
+        <TabBar />
       </div>
-        <TabBar/>
-    </div>
+    </>
   );
 };
 

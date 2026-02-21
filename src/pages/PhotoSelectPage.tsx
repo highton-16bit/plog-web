@@ -126,9 +126,9 @@ const PhotoSelectPage = () => {
   // ─── 사진 미선택 상태 ────────────────────────────────────
   if (photos.length === 0) {
     return (
-      <div className="flex flex-col h-screen bg-white">
+      <>
         {/* 헤더 */}
-        <div className="flex items-center gap-4 px-4 py-4 border-b border-gray-100">
+        <div className="app-header flex items-center gap-4 px-4 py-4 border-b border-gray-100">
           <button onClick={() => navigate(-1)} className="p-1">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
@@ -141,7 +141,7 @@ const PhotoSelectPage = () => {
         </div>
 
         {/* 갤러리 오픈 트리거 */}
-        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+        <div className="app-content flex flex-col items-center justify-center gap-4">
           <p className="text-sm text-gray-400">업로드할 사진을 선택하세요</p>
           <button
             onClick={handleGalleryClick}
@@ -158,15 +158,15 @@ const PhotoSelectPage = () => {
             onChange={handleFileChange}
           />
         </div>
-      </div>
+      </>
     );
   }
 
   // ─── 사진 그리드 ─────────────────────────────────────────
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <>
       {/* 헤더 */}
-      <div className="flex items-center gap-4 px-4 py-4 border-b border-gray-100">
+      <div className="app-header flex items-center gap-4 px-4 py-4 border-b border-gray-100">
         <button onClick={() => navigate(-1)} className="p-1">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
@@ -195,7 +195,7 @@ const PhotoSelectPage = () => {
       </div>
 
       {/* 3열 그리드 */}
-      <div className="flex-1 overflow-y-auto grid grid-cols-3 gap-0.5 bg-gray-100 content-start">
+      <div className="app-content overflow-y-auto grid grid-cols-3 gap-0.5 bg-gray-100 content-start">
         {photos.map((photo, index) => {
           const isSelected = photo.order !== undefined;
           return (
@@ -230,7 +230,7 @@ const PhotoSelectPage = () => {
 
       {/* 하단 바 (선택한 사진이 있을 때) */}
       {selectedPhotos.length > 0 && (
-        <div className="flex items-center gap-3 px-4 py-3 border-t border-gray-100 bg-white">
+        <div className="app-bottom-nav flex items-center gap-3 px-4 py-3 border-t border-gray-100 bg-white">
           {/* 선택된 썸네일들 */}
           <div className="flex gap-2 flex-1 overflow-x-auto scrollbar-hide">
             {selectedPhotos.map((photo) => (
@@ -261,7 +261,7 @@ const PhotoSelectPage = () => {
           </button>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

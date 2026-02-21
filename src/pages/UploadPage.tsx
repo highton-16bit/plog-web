@@ -17,14 +17,14 @@ const UploadPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <>
       {/* 헤더 */}
-      <div className="flex items-center justify-center px-4 py-4">
+      <div className="app-header flex items-center justify-center px-4 py-4">
         <h1 className="text-lg font-bold text-gray-900">업로드</h1>
       </div>
 
       {/* 여행 목록 */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="app-content">
         {DUMMY_TRAVELS.map((travel, i) => (
           <button
             key={travel.id}
@@ -41,8 +41,10 @@ const UploadPage = () => {
         ))}
       </div>
 
-      <TabBar />
-    </div>
+      <div className="app-bottom-nav">
+        <TabBar />
+      </div>
+    </>
   );
 };
 

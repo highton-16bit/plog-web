@@ -139,9 +139,9 @@ const ResearchPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen relative">
+    <div className="relative w-full">
       {/* 검색바 */}
-      <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-4">
+      <div className="fixed top-0 left-0 right-0 z-20 px-4 pt-4">
         <form onSubmit={handleSearch}>
           <div className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 shadow-lg">
             {isLoading ? (

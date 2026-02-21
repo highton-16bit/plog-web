@@ -14,8 +14,8 @@ const App = () => {
   return (
     <BrowserRouter>
       <PostsProvider>
-        <div className="min-h-screen bg-gray-200 flex justify-center">
-          <div className="w-full max-w-97.5 min-h-screen bg-white shadow-2xl">
+        <div className="app-shell">
+          <div className="app-content">
             <Routes>
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/home" element={<HomePage />} />

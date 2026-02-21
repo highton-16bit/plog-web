@@ -96,9 +96,9 @@ const ProfilePage = () => {
   const savedPosts = DUMMY_POSTS.filter((p) => bookmarks.has(p.id));
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <>
       {/* 헤더 */}
-      <div className="flex items-center justify-between px-4 pt-14 pb-3">
+      <div className="app-header flex items-center justify-between px-4 pt-14 pb-3">
         <div className="w-8" />
         <span className="text-sm font-semibold text-gray-900">gangmin_0716</span>
         <button className="w-8 flex justify-end">
@@ -113,6 +113,7 @@ const ProfilePage = () => {
         </button>
       </div>
 
+      <div className="app-content overflow-y-auto">
       {/* 프로필 정보 */}
       <div className="flex items-center gap-5 px-5 pb-5">
         <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -208,9 +209,12 @@ const ProfilePage = () => {
             </div>
           ))}
       </div>
+      </div>
 
-      <TabBar />
-    </div>
+      <div className="app-bottom-nav">
+        <TabBar />
+      </div>
+    </>
   );
 };
 

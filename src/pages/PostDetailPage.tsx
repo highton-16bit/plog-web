@@ -11,16 +11,16 @@ const PostDetailPage = () => {
 
   if (!post) {
     return (
-      <div className="flex items-center justify-center h-screen text-gray-400 text-sm">
+      <div className="app-content flex items-center justify-center text-gray-400 text-sm">
         게시글을 찾을 수 없습니다.
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white overflow-y-auto scrollbar-hide">
+    <>
       {/* 헤더 */}
-      <div className="flex items-center justify-between px-4 py-4 sticky top-0 bg-white z-10 border-b border-gray-100">
+      <div className="app-header flex items-center justify-between px-4 py-4 bg-white border-b border-gray-100">
         <button onClick={() => navigate(-1)} className="p-1">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M19 12H5M5 12l7-7M5 12l7 7"
@@ -31,6 +31,7 @@ const PostDetailPage = () => {
         <div className="w-8" />
       </div>
 
+      <div className="app-content overflow-y-auto scrollbar-hide">
       {/* 유저 정보 */}
       <div className="flex items-center gap-3 px-4 py-4">
         <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
@@ -100,7 +101,8 @@ const PostDetailPage = () => {
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

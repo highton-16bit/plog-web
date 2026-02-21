@@ -175,9 +175,9 @@ const SchedulePage = () => {
   const tlItems = tlKey ? schedules[tlKey] || [] : [];
 
   return (
-    <div className="flex flex-col h-screen bg-white relative overflow-hidden">
+    <>
       {/* 헤더 */}
-      <div className="flex items-center justify-between px-4 pt-14 pb-0">
+      <div className="app-header flex items-center justify-between px-4 pt-14 pb-0">
         <div className="flex items-center gap-1">
           <button
             className="p-1"
@@ -220,6 +220,7 @@ const SchedulePage = () => {
         </div>
       </div>
 
+      <div className="app-content overflow-y-auto">
       {/* 월 */}
       <div className="px-4 pt-1 pb-3">
         <span className="text-4xl font-black text-gray-900">{month + 1}월</span>
@@ -333,9 +334,10 @@ const SchedulePage = () => {
         </div>
       )}
 
-      <TabBar />
-
-      {/* 타임라인 바텀시트 */}
+      <div className="app-bottom-nav">
+        <TabBar />
+      </div>
+      </div>
       {timelineDate && (
         <div className="fixed inset-0 z-40 flex flex-col justify-end">
           <div
@@ -347,7 +349,7 @@ const SchedulePage = () => {
             }}
           />
           <div
-            className="relative w-full max-w-97.5 mx-auto bg-white rounded-t-3xl overflow-hidden"
+            className="relative w-full bg-white rounded-t-3xl overflow-hidden"
             style={{
               maxHeight: "72vh",
               transform: `translateY(${swipeDy}px)`,
@@ -480,7 +482,7 @@ const SchedulePage = () => {
         }`}
       >
         ✓ {toast.msg}
-      </div>
+      iv>
     </div>
   );
 };
