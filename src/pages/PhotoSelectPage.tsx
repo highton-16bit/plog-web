@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { uploadPhotoToS3, registerPhotoToTravel } from "../api/photos";
+import { requestFilePicker, type FileInfo } from "../bridge";
 
 interface PhotoItem {
   file: File;
@@ -16,6 +17,54 @@ const PhotoSelectPage = () => {
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // FileInfo를 File 객체로 변환
+  const fileInfoToFile = async (fileInfo: FileInfo): Promise<File> => {
+    try {
+      // base64 URI인 경우
+      if (fileInfo.uri.startsWith("data:")) {
+        const arr = fileInfo.uri.split(",");
+        const bstr = atob(arr[1]);
+        const n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        for (let i = 0; i < n; i++) {
+          u8arr[i] = bstr.charCodeAt(i);
+        }
+        return new File([u8arr], fileInfo.name, { type: fileInfo.mimeType });
+      }
+      // 파일 경로 또는 URL인 경우
+      const response = await fetch(fileInfo.uri);
+      const blob = await response.blob();
+      return new File([blob], fileInfo.name, { type: fileInfo.mimeType });
+    } catch (err) {
+      console.error(`파일 변환 실패: ${fileInfo.name}`, err);
+      throw err;
+    }
+  };
+
+  // Flutter bridge를 통한 파일 선택
+  const handleGalleryClick = async () => {
+    requestFilePicker(
+      async (files: FileInfo[]) => {
+        try {
+          const convertedFiles = await Promise.all(
+            files.map((f) => fileInfoToFile(f))
+          );
+          const items: PhotoItem[] = convertedFiles.map((file) => ({
+            file,
+            previewUrl: URL.createObjectURL(file),
+          }));
+          setPhotos(items);
+        } catch (err) {
+          console.error("파일 처리 실패:", err);
+        }
+      },
+      (error) => {
+        console.error("파일 선택 오류:", error);
+      },
+      { mimeTypes: ["image/*"], allowMultiple: true }
+    );
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -95,7 +144,7 @@ const PhotoSelectPage = () => {
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
           <p className="text-sm text-gray-400">업로드할 사진을 선택하세요</p>
           <button
-            onClick={() => fileInputRef.current?.click()}
+            onClick={handleGalleryClick}
             className="px-8 py-3 bg-plog text-white rounded-2xl text-sm font-semibold"
           >
             갤러리 열기
@@ -130,7 +179,7 @@ const PhotoSelectPage = () => {
 
         {/* 갤러리 다시 열기 */}
         <button
-          onClick={() => fileInputRef.current?.click()}
+          onClick={handleGalleryClick}
           className="ml-auto text-xs text-plog font-medium"
         >
           다시선택

@@ -25,6 +25,12 @@ export const BRIDGE_EVENTS = {
   READY: "bridge.ready",
   ERROR: "bridge.error",
 
+  // 파일 선택 (Web → Flutter)
+  REQUEST_FILE_PICKER: "requestFilePicker",
+
+  // 파일 픽커 결과 (Flutter → Web)
+  FILE_PICKER_RESULT: "filePicker.result",
+
   // 인증 (Flutter → Web)
   AUTH_STATE_CHANGED: "auth.state_changed",
 
@@ -52,6 +58,22 @@ export interface AuthStatePayload {
   user?: { id: string; username: string };
 }
 
+export interface FilePickerPayload {
+  mimeTypes: string[];
+  allowMultiple: boolean;
+}
+
+export interface FileInfo {
+  name: string;
+  uri: string; // base64 또는 파일 경로
+  mimeType: string;
+  size?: number;
+}
+
+export interface FilePickerResultPayload {
+  files: FileInfo[];
+}
+
 export interface UploadRequestPayload {
   travelId: string;
   isSnapshot: boolean;
@@ -70,6 +92,19 @@ export interface DeepLinkPayload {
 
 const uuid = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+
+const generateFilePickerCorrelationId = () => `fp_${Date.now()}`;
+
+// ─── 강화된 window 타입 정의 ───────────────────────────────────
+
+declare global {
+  interface Window {
+    flutterBridge?: {
+      postMessage: (msg: string) => void;
+    };
+    onFlutterEvent?: (msg: BridgeMessage) => void;
+  }
+}
 
 // ─── Web → Flutter 송신 ───────────────────────────────────────
 
@@ -100,6 +135,68 @@ export function sendToFlutter<P>(event: string, payload?: P): string {
     // 개발 환경 로그
     console.debug("[Bridge → Flutter]", msg);
   }
+
+  return correlationId;
+}
+
+// ─── 파일 선택 요청 ────────────────────────────────────────────
+
+export function requestFilePicker(
+  onResult: (files: FileInfo[]) => void,
+  onError: (error: BridgeError) => void,
+  options?: { mimeTypes?: string[]; allowMultiple?: boolean }
+): string {
+  const correlationId = generateFilePickerCorrelationId();
+  const mimeTypes = options?.mimeTypes ?? ["image/*"];
+  const allowMultiple = options?.allowMultiple ?? true;
+
+  const msg: BridgeMessage<FilePickerPayload> = {
+    event: BRIDGE_EVENTS.REQUEST_FILE_PICKER,
+    correlationId,
+    payload: {
+      mimeTypes,
+      allowMultiple,
+    },
+  };
+
+  const msgStr = JSON.stringify(msg);
+
+  // window.flutterBridge.postMessage 방식으로 전송
+  if (typeof window !== "undefined" && window.flutterBridge) {
+    window.flutterBridge.postMessage(msgStr);
+  } else {
+    console.debug("[Bridge → Flutter] requestFilePicker", msg);
+  }
+
+  // window.onFlutterEvent 리스너 설정
+  const originalOnFlutterEvent = window.onFlutterEvent;
+  window.onFlutterEvent = (eventMsg: BridgeMessage) => {
+    // 기존 리스너 실행
+    if (originalOnFlutterEvent) {
+      originalOnFlutterEvent(eventMsg);
+    }
+
+    // 파일 선택 결과 처리
+    if (
+      eventMsg.event === BRIDGE_EVENTS.FILE_PICKER_RESULT &&
+      eventMsg.correlationId === correlationId
+    ) {
+      const payload = eventMsg.payload as FilePickerResultPayload;
+      onResult(payload.files);
+      window.onFlutterEvent = originalOnFlutterEvent;
+    }
+
+    // 에러 처리
+    if (
+      eventMsg.event === BRIDGE_EVENTS.ERROR &&
+      eventMsg.correlationId === correlationId
+    ) {
+      if (eventMsg.error) {
+        onError(eventMsg.error);
+      }
+      window.onFlutterEvent = originalOnFlutterEvent;
+    }
+  };
 
   return correlationId;
 }
